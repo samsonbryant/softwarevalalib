@@ -1,0 +1,15 @@
+LOGO INSTRUCTIONS:
+Please save your company logo file as "logo.png" or "logo.svg" in this directory.
+
+The logo should include:
+- "SOFTWARE" with tech-stylized letters
+- "VALA" below the W
+- "THE NAME OF TRUST" tagline
+- "Liberia" location
+- Color scheme: Blue, Red, White
+
+File formats supported: PNG, SVG, JPG
+
+Preferred: SVG for best quality
+Minimum: 200x80px for header use
+Large: 400x160px for hero section

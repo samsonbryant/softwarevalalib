@@ -1,0 +1,135 @@
+{
+  "company": {
+    "name": "Software Vala Liberia",
+    "tagline": "The Name of Trust",
+    "slogan": "Powering Liberia's Future with Innovative Software Solutions",
+    "description": "A leading global software company with a growing footprint in Liberia. Our platform offers over 5,000 software solutions tailored to education, finance, retail, and beyond. We are proud of our commitment to delivering high-quality software services at competitive, fixed prices.",
+    "mission": "To empower institutions and individuals in Liberia by providing over 5,000 high-quality, competitively priced software solutions across essential sectors like education, finance, and retail, ensuring fixed, transparent costs and driving technological advancement.",
+    "vision": "To be the foremost and most trusted provider of diverse software solutions in Liberia, recognized for our unwavering commitment to quality, affordability, and enabling digital transformation for a rapidly growing client base. Our Motto: \"The Name of Trust\"",
+    "founded": "2019",
+    "motto": "The Name of Trust",
+    "location": {
+      "city": "Paynesville",
+      "state": "Monrovia", 
+      "country": "Liberia",
+      "region": "West Africa",
+      "fullAddress": "Paynesville, Monrovia, Liberia, West Africa"
+    }
+  },
+  "contact": {
+    "phone": "+231 777 969 602",
+    "phoneSecondary": "+231 888 636 071",
+    "phoneAlternate": "+231 775 592 486 / +231 881 031 901",
+    "email": "softwarevalaliberiainc@gmail.com",
+    "ceoEmail": "softwarevalaliberiainc@gmail.com",
+    "cofounderEmail": "Samsonbryant89@gmail.com",
+    "website": "https://softwarevalaliberia.com",
+    "businessHours": {
+      "monday": "8:00 AM - 6:00 PM",
+      "tuesday": "8:00 AM - 6:00 PM", 
+      "wednesday": "8:00 AM - 6:00 PM",
+      "thursday": "8:00 AM - 6:00 PM",
+      "friday": "8:00 AM - 6:00 PM",
+      "saturday": "9:00 AM - 2:00 PM",
+      "sunday": "Closed"
+    }
+  },
+  "social": {
+    "facebook": "https://facebook.com/softwarevalaliberia",
+    "twitter": "https://twitter.com/softwarevala",
+    "linkedin": "https://linkedin.com/company/software-vala-liberia",
+    "instagram": "https://instagram.com/softwarevalaliberia"
+  },
+  "stats": {
+    "softwareSolutions": 5000,
+    "projectsCompleted": 50,
+    "happyClients": 25,
+    "yearsExperience": 5,
+    "clientSatisfaction": 100,
+    "teamMembers": 8,
+    "technologiesUsed": 15
+  },
+  "benefits": [
+    {
+      "title": "No Advance Software Payment",
+      "description": "We operate with transparency and trust. Maintenance fees required annually."
+    },
+    {
+      "title": "Quick Delivery",
+      "description": "Solutions deployed within 72 hours or a few weeks, depending on scope."
+    },
+    {
+      "title": "Fixed Pricing",
+      "description": "Know your exact cost from the beginning. No hidden charges."
+    },
+    {
+      "title": "Full Support",
+      "description": "Technical assistance and staff orientation for smooth adoption."
+    }
+  ],
+  "services": [
+    "Software Development",
+    "Web Development",
+    "Web Hosting",
+    "Cloud Services",
+    "Network Infrastructure",
+    "Digital Marketing",
+    "Training and Support",
+    "Cybersecurity Services",
+    "CCTV Installation",
+    "Graphic Design"
+  ],
+  "leadership": [
+    {
+      "name": "Solomon Borkai",
+      "role": "CEO/Founder",
+      "email": "softwarevalaliberiainc@gmail.com",
+      "phone": "+231 777 969 602 / +231 888 636 071",
+      "description": "Visionary leader driving Software Vala Liberia's mission to deliver trusted software solutions across Liberia."
+    },
+    {
+      "name": "Samson Bryant",
+      "role": "Co-founder, ICT Director and Developer",
+      "email": "Samsonbryant89@gmail.com",
+      "phone": "+231 775 592 486 / +231 881 031 901",
+      "description": "Expert in ICT strategy and software development, leading our technical innovation."
+    }
+  ],
+  "values": [
+    {
+      "title": "Local Expertise",
+      "description": "Deep understanding of the Liberian market and business environment",
+      "icon": "🎯"
+    },
+    {
+      "title": "Quality First", 
+      "description": "We never compromise on quality and always deliver excellence",
+      "icon": "⭐"
+    },
+    {
+      "title": "Innovation",
+      "description": "Using cutting-edge technology to solve real-world problems",
+      "icon": "🚀"
+    },
+    {
+      "title": "Partnership",
+      "description": "We work as your technology partner, not just a vendor",
+      "icon": "🤝"
+    }
+  ],
+  "certifications": [
+    "ISO 9001:2015 Quality Management",
+    "Agile & Scrum Certified",
+    "Google Cloud Partner",
+    "Microsoft Certified Partner"
+  ],
+  "technologies": [
+    "React", "Node.js", "Python", "Laravel", "Vue.js", "React Native", 
+    "Flutter", "MongoDB", "PostgreSQL", "MySQL", "AWS", "Google Cloud",
+    "Docker", "Kubernetes", "Git", "Jenkins"
+  ],
+  "industries": [
+    "Education", "Healthcare", "Finance", "Government", "Non-Profit",
+    "Retail", "Agriculture", "Transportation", "Real Estate"
+  ]
+}

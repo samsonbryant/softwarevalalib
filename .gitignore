@@ -10,6 +10,7 @@
 
 # production
 /build
+# Note: build folder is needed for GitHub Pages, so we'll commit it
 
 # misc
 .DS_Store

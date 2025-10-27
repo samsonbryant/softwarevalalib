@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "quote": "Software Vala Liberia transformed our school's administrative processes. The SchoolEase system has made student management so much more efficient.",
+    "author": "Dr. Sarah Johnson",
+    "role": "Principal, Monrovia High School",
+    "image": "/images/testimonial-1.jpg"
+  },
+  {
+    "id": 2,
+    "quote": "Their mobile app development expertise helped us reach more customers. The business directory app has increased our visibility significantly.",
+    "author": "James Kollie",
+    "role": "Owner, Kollie's Electronics",
+    "image": "/images/testimonial-2.jpg"
+  },
+  {
+    "id": 3,
+    "quote": "Professional, reliable, and always delivers on time. Software Vala Liberia understands the Liberian market and builds solutions that work.",
+    "author": "Mary Williams",
+    "role": "CEO, Williams Trading Company",
+    "image": "/images/testimonial-3.jpg"
+  }
+]
