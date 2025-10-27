@@ -1,0 +1,26 @@
+{
+  "files": {
+    "main.css": "/softwarevalalib/static/css/main.67cfd020.css",
+    "main.js": "/softwarevalalib/static/js/main.ef19eb25.js",
+    "static/js/674.8671822b.chunk.js": "/softwarevalalib/static/js/674.8671822b.chunk.js",
+    "static/js/881.f03ee9c3.chunk.js": "/softwarevalalib/static/js/881.f03ee9c3.chunk.js",
+    "static/js/283.fb356995.chunk.js": "/softwarevalalib/static/js/283.fb356995.chunk.js",
+    "static/js/638.29928d4f.chunk.js": "/softwarevalalib/static/js/638.29928d4f.chunk.js",
+    "static/js/390.f014e55d.chunk.js": "/softwarevalalib/static/js/390.f014e55d.chunk.js",
+    "static/js/453.70fe1109.chunk.js": "/softwarevalalib/static/js/453.70fe1109.chunk.js",
+    "static/media/SVL Logo.jpg": "/softwarevalalib/static/media/SVL Logo.fd77490ecf4137719602.jpg",
+    "index.html": "/softwarevalalib/index.html",
+    "main.67cfd020.css.map": "/softwarevalalib/static/css/main.67cfd020.css.map",
+    "main.ef19eb25.js.map": "/softwarevalalib/static/js/main.ef19eb25.js.map",
+    "674.8671822b.chunk.js.map": "/softwarevalalib/static/js/674.8671822b.chunk.js.map",
+    "881.f03ee9c3.chunk.js.map": "/softwarevalalib/static/js/881.f03ee9c3.chunk.js.map",
+    "283.fb356995.chunk.js.map": "/softwarevalalib/static/js/283.fb356995.chunk.js.map",
+    "638.29928d4f.chunk.js.map": "/softwarevalalib/static/js/638.29928d4f.chunk.js.map",
+    "390.f014e55d.chunk.js.map": "/softwarevalalib/static/js/390.f014e55d.chunk.js.map",
+    "453.70fe1109.chunk.js.map": "/softwarevalalib/static/js/453.70fe1109.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.67cfd020.css",
+    "static/js/main.ef19eb25.js"
+  ]
+}
