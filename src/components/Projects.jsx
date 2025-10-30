@@ -7,7 +7,7 @@ import projectsData from '../data/projects.json';
 // Example: "School Ease Management.jpg"
 // Webpack will include only matched files
 // @ts-ignore - require.context is provided by webpack in CRA
-const imagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/);
+const imagesCtx = require.context('../assets/images', true, /\.(png|jpe?g|webp)$/);
 const imageKeys = imagesCtx.keys();
 
 function normalizeName(name) {
@@ -47,7 +47,10 @@ function resolveProjectImage(fileName) {
 
   // 4) Contains slug
   key = imageKeys.find(k => slugify(fileBase(k)).includes(targetSlug));
-  return key ? imagesCtx(key) : null;
+  if (key) return imagesCtx(key);
+
+  // 5) Final fallback to public path
+  return `/assets/images/${fileName}`;
 }
 
 const Projects = () => {
