@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamData from '../data/team.json';
+import solomonBorkaiImg from '../assets/images/solomon-borkai.jpg';
+import samsonBryantImg from '../assets/images/samson-bryant.jpg';
 
 // Preload all candidate images from src/assets/images (any depth)
 // This allows using images added to src/assets/images without editing imports everywhere.
 // Webpack/Cra will bundle only the matched files.
-const assetImagesContext =
-  typeof require !== 'undefined' &&
-  // @ts-ignore - require.context is provided by webpack
-  require.context('../assets/images', true, /\.(png|jpe?g|webp)$/);
-
-const allAssetImageKeys = assetImagesContext ? assetImagesContext.keys() : [];
+// Direct, reliable mapping of known team members to imported images.
+const nameToImportedImage = {
+  'solomon-borkai': solomonBorkaiImg,
+  'samson-bryant': samsonBryantImg,
+};
 
 function toSlug(value) {
   return String(value || '')
@@ -19,32 +20,11 @@ function toSlug(value) {
 }
 
 function resolveMemberImage(member) {
-  // Prefer finding an image inside src/assets/images by name heuristics
   const nameSlug = toSlug(member.name);
-  const explicit = member.image && !member.image.startsWith('/');
-
-  const candidateFragments = [
-    explicit ? toSlug(member.image) : null,
-    nameSlug,
-  ].filter(Boolean);
-
-  for (const key of allAssetImageKeys) {
-    const keySlug = toSlug(key);
-    for (const fragment of candidateFragments) {
-      if (fragment && keySlug.includes(fragment)) {
-        try {
-          return assetImagesContext(key);
-        } catch (_) {
-          // ignore and continue
-        }
-      }
-    }
-  }
-
-  // If a public path is provided (starts with '/'), use it as a last resort
-  if (member.image && member.image.startsWith('/')) {
-    return member.image;
-  }
+  // 1) Exact mapping via imports (most reliable)
+  if (nameToImportedImage[nameSlug]) return nameToImportedImage[nameSlug];
+  // 2) If a public path is provided (starts with '/'), use it as a fallback
+  if (member.image && member.image.startsWith('/')) return member.image;
   return null;
 }
 
