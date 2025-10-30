@@ -1,4 +1,5 @@
 import React, { Suspense, lazy, useEffect } from 'react';
+import companyLogo from './assets/images/SVL Logo.jpg';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -33,6 +34,41 @@ function App() {
       document.head.appendChild(metaKeywords);
     }
     metaKeywords.content = 'software development, web development, mobile apps, Liberia, Monrovia, Paynesville';
+
+    // Set favicon and apple-touch-icon to company logo (works on Render)
+    const ensureLinkTag = (rel, type) => {
+      let linkTag = document.querySelector(`link[rel="${rel}"]`);
+      if (!linkTag) {
+        linkTag = document.createElement('link');
+        linkTag.setAttribute('rel', rel);
+        if (type) linkTag.setAttribute('type', type);
+        document.head.appendChild(linkTag);
+      }
+      return linkTag;
+    };
+
+    const favicon = ensureLinkTag('icon', 'image/png');
+    favicon.setAttribute('href', companyLogo);
+
+    const appleIcon = ensureLinkTag('apple-touch-icon');
+    appleIcon.setAttribute('href', companyLogo);
+
+    // Update social preview images to company logo
+    const ensureMetaProperty = (property) => {
+      let tag = document.querySelector(`meta[property="${property}"]`);
+      if (!tag) {
+        tag = document.createElement('meta');
+        tag.setAttribute('property', property);
+        document.head.appendChild(tag);
+      }
+      return tag;
+    };
+
+    const ogImage = ensureMetaProperty('og:image');
+    ogImage.setAttribute('content', companyLogo);
+
+    const twitterImage = ensureMetaProperty('twitter:image');
+    twitterImage.setAttribute('content', companyLogo);
   }, []);
 
   return (
