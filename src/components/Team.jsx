@@ -1,6 +1,53 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamData from '../data/team.json';
 
+// Preload all candidate images from src/assets/images (any depth)
+// This allows using images added to src/assets/images without editing imports everywhere.
+// Webpack/Cra will bundle only the matched files.
+const assetImagesContext =
+  typeof require !== 'undefined' &&
+  // @ts-ignore - require.context is provided by webpack
+  require.context('../assets/images', true, /\.(png|jpe?g|webp)$/);
+
+const allAssetImageKeys = assetImagesContext ? assetImagesContext.keys() : [];
+
+function toSlug(value) {
+  return String(value || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '');
+}
+
+function resolveMemberImage(member) {
+  // Prefer finding an image inside src/assets/images by name heuristics
+  const nameSlug = toSlug(member.name);
+  const explicit = member.image && !member.image.startsWith('/');
+
+  const candidateFragments = [
+    explicit ? toSlug(member.image) : null,
+    nameSlug,
+  ].filter(Boolean);
+
+  for (const key of allAssetImageKeys) {
+    const keySlug = toSlug(key);
+    for (const fragment of candidateFragments) {
+      if (fragment && keySlug.includes(fragment)) {
+        try {
+          return assetImagesContext(key);
+        } catch (_) {
+          // ignore and continue
+        }
+      }
+    }
+  }
+
+  // If a public path is provided (starts with '/'), use it as a last resort
+  if (member.image && member.image.startsWith('/')) {
+    return member.image;
+  }
+  return null;
+}
+
 const Team = () => {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef(null);
@@ -87,9 +134,11 @@ const Team = () => {
               }}
             >
               {/* Member Photo */}
-              {member.image ? (
+              {(() => {
+                const resolved = resolveMemberImage(member);
+                return resolved ? (
                 <img
-                  src={member.image}
+                  src={resolved}
                   alt={`${member.name} profile`}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
@@ -105,14 +154,15 @@ const Team = () => {
                     boxShadow: '0 8px 20px rgba(0,0,0,0.12)'
                   }}
                 />
-              ) : null}
+                ) : null;
+              })()}
               <div style={{
                 width: '100px',
                 height: '100px',
                 background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
                 borderRadius: '50%',
                 margin: '0 auto 1.5rem auto',
-                display: member.image ? 'none' : 'flex',
+                display: resolveMemberImage(member) ? 'none' : 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '2rem',
