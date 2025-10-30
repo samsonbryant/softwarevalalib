@@ -2,21 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import projectsData from '../data/projects.json';
 
-// Import known project images for reliable resolution
-import projectImgSchool from '../assets/images/School Ease Management.jpg';
-import projectImgBusiness from '../assets/images/Liberia Business .jpg';
-import projectImgHealthcare from '../assets/images/Healthcare .jpg';
-import projectImgEcommerce from '../assets/images/E-commerce .jpg';
+// Build-time image resolver that tolerates spaces and varied casing
+// It looks up images from src/assets/images by filename from projects.json
+// Example: "School Ease Management.jpg"
+// Webpack will include only matched files
+// @ts-ignore - require.context is provided by webpack in CRA
+const imagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/);
+const imageKeys = imagesCtx.keys();
 
-const projectTitleToImage = {
-  'schoolease management system': projectImgSchool,
-  'liberia business directory': projectImgBusiness,
-  'healthcare management system': projectImgHealthcare,
-  'e-commerce platform': projectImgEcommerce,
-};
-
-function toKey(value) {
-  return String(value || '').toLowerCase().trim();
+function resolveProjectImage(fileName) {
+  if (!fileName) return null;
+  const normalized = String(fileName).toLowerCase().trim();
+  const key = imageKeys.find(k => k.toLowerCase().endsWith(`/${normalized}`));
+  return key ? imagesCtx(key) : null;
 }
 
 const Projects = () => {
@@ -158,9 +156,9 @@ const Projects = () => {
                 background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)',
                 overflow: 'hidden'
               }}>
-                {projectTitleToImage[toKey(project.title)] ? (
+                {resolveProjectImage(project.image) ? (
                   <img
-                    src={projectTitleToImage[toKey(project.title)]}
+                    src={resolveProjectImage(project.image)}
                     alt={`${project.title} cover`}
                     style={{
                       width: '100%',
