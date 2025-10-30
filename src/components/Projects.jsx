@@ -2,6 +2,23 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import projectsData from '../data/projects.json';
 
+// Import known project images for reliable resolution
+import projectImgSchool from '../assets/images/School Ease Management.jpg';
+import projectImgBusiness from '../assets/images/Liberia Business .jpg';
+import projectImgHealthcare from '../assets/images/Healthcare .jpg';
+import projectImgEcommerce from '../assets/images/E-commerce .jpg';
+
+const projectTitleToImage = {
+  'schoolease management system': projectImgSchool,
+  'liberia business directory': projectImgBusiness,
+  'healthcare management system': projectImgHealthcare,
+  'e-commerce platform': projectImgEcommerce,
+};
+
+function toKey(value) {
+  return String(value || '').toLowerCase().trim();
+}
+
 const Projects = () => {
   const [filter, setFilter] = useState('All');
   const [isVisible, setIsVisible] = useState(false);
@@ -137,21 +154,36 @@ const Projects = () => {
               {/* Project Image */}
               <div style={{
                 height: '200px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 position: 'relative',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
+                background: 'linear-gradient(135deg, #eef2ff 0%, #e0e7ff 100%)',
+                overflow: 'hidden'
               }}>
-                <div style={{
-                  fontSize: '4rem',
-                  opacity: 0.3
-                }}>
-                  {project.category === 'Web Development' && '🌐'}
-                  {project.category === 'Mobile Applications' && '📱'}
-                  {project.category === 'Software Development' && '💻'}
-                  {project.category === 'Database & Systems' && '🗄️'}
-                </div>
+                {projectTitleToImage[toKey(project.title)] ? (
+                  <img
+                    src={projectTitleToImage[toKey(project.title)]}
+                    alt={`${project.title} cover`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                ) : (
+                  <div style={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '4rem',
+                    opacity: 0.25
+                  }}>
+                    {project.category === 'Web Development' && '🌐'}
+                    {project.category === 'Mobile Applications' && '📱'}
+                    {project.category === 'Software Development' && '💻'}
+                    {project.category === 'Database & Systems' && '🗄️'}
+                  </div>
+                )}
                 <div style={{
                   position: 'absolute',
                   top: '1rem',
