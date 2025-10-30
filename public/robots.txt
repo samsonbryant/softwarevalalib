@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://softwarevala.com/sitemap.xml
+Sitemap: https://softwarevalalib.app/sitemap.xml
