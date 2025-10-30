@@ -10,10 +10,43 @@ import projectsData from '../data/projects.json';
 const imagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/);
 const imageKeys = imagesCtx.keys();
 
+function normalizeName(name) {
+  return String(name || '')
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ');
+}
+
+function slugify(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-');
+}
+
+function fileBase(key) {
+  const idx = key.lastIndexOf('/');
+  return idx >= 0 ? key.slice(idx + 1) : key;
+}
+
 function resolveProjectImage(fileName) {
   if (!fileName) return null;
-  const normalized = String(fileName).toLowerCase().trim();
-  const key = imageKeys.find(k => k.toLowerCase().endsWith(`/${normalized}`));
+  const targetNorm = normalizeName(fileName);
+  const targetSlug = slugify(fileName);
+
+  // 1) Exact case-insensitive match
+  let key = imageKeys.find(k => normalizeName(fileBase(k)) === targetNorm);
+  if (key) return imagesCtx(key);
+
+  // 2) Ends-with match (case-insensitive)
+  key = imageKeys.find(k => normalizeName(k).endsWith(`/${targetNorm}`));
+  if (key) return imagesCtx(key);
+
+  // 3) Slug match (ignores spaces/punctuation)
+  key = imageKeys.find(k => slugify(fileBase(k)) === targetSlug);
+  if (key) return imagesCtx(key);
+
+  // 4) Contains slug
+  key = imageKeys.find(k => slugify(fileBase(k)).includes(targetSlug));
   return key ? imagesCtx(key) : null;
 }
 
