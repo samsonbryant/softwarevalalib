@@ -87,13 +87,32 @@ const Team = () => {
               }}
             >
               {/* Member Photo */}
+              {member.image ? (
+                <img
+                  src={member.image}
+                  alt={`${member.name} profile`}
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    const fallback = e.currentTarget.nextSibling;
+                    if (fallback) fallback.style.display = 'flex';
+                  }}
+                  style={{
+                    width: '100px',
+                    height: '100px',
+                    borderRadius: '50%',
+                    margin: '0 auto 1.5rem auto',
+                    objectFit: 'cover',
+                    boxShadow: '0 8px 20px rgba(0,0,0,0.12)'
+                  }}
+                />
+              ) : null}
               <div style={{
                 width: '100px',
                 height: '100px',
                 background: 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)',
                 borderRadius: '50%',
                 margin: '0 auto 1.5rem auto',
-                display: 'flex',
+                display: member.image ? 'none' : 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '2rem',
