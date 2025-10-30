@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamData from '../data/team.json';
-import solomonBorkaiImg from '../assets/images/solomon-borkai.jpg';
-import samsonBryantImg from '../assets/images/samson-bryant.jpg';
 
 // Preload all candidate images from src/assets/images (any depth)
 // This allows using images added to src/assets/images without editing imports everywhere.
 // Webpack/Cra will bundle only the matched files.
-// Direct, reliable mapping of known team members to imported images.
-const nameToImportedImage = {
-  'solomon-borkai': solomonBorkaiImg,
-  'samson-bryant': samsonBryantImg,
-};
+// Build-time image resolver from src/assets/images (no direct imports)
+// @ts-ignore - webpack specific
+const teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/);
+const teamImageKeys = teamImagesCtx.keys();
 
 function toSlug(value) {
   return String(value || '')
@@ -21,9 +18,19 @@ function toSlug(value) {
 
 function resolveMemberImage(member) {
   const nameSlug = toSlug(member.name);
-  // 1) Exact mapping via imports (most reliable)
-  if (nameToImportedImage[nameSlug]) return nameToImportedImage[nameSlug];
-  // 2) If a public path is provided (starts with '/'), use it as a fallback
+  // Try exact filename in member.image first (case-insensitive)
+  if (member.image && !member.image.startsWith('/')) {
+    const normalized = String(member.image).toLowerCase().trim();
+    const exactKey = teamImageKeys.find(k => k.toLowerCase().endsWith(`/${normalized}`));
+    if (exactKey) return teamImagesCtx(exactKey);
+  }
+  // Otherwise, find any image file whose name contains the name slug
+  for (const key of teamImageKeys) {
+    if (toSlug(key).includes(nameSlug)) {
+      try { return teamImagesCtx(key); } catch (_) { /* ignore */ }
+    }
+  }
+  // Fallback: allow public path if provided
   if (member.image && member.image.startsWith('/')) return member.image;
   return null;
 }
