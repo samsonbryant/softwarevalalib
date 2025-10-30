@@ -1,9 +1,9 @@
 {
   "root": "build",
   "clean_urls": false,
-  "routes": {
-    "/**": "index.html"
-  },
+  "rewrites": [
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
   "headers": {
     "/**": {
       "X-Content-Type-Options": "nosniff",
