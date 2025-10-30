@@ -4,9 +4,9 @@
     "title": "SchoolEase Management System",
     "description": "A comprehensive school management system designed for Liberian educational institutions. Features student enrollment, grade management, and administrative tools.",
     "image": "School Ease Management.jpg",
-    "link": "/projects/schoolease",
+    "link": "https://school-managment-system-liberia.fly.dev/",
     "technologies": ["React", "Node.js", "MongoDB", "Express"],
-    "category": "Web Development"
+    "category": "Software Development"
   },
   {
     "id": 2,
@@ -34,5 +34,14 @@
     "link": "/projects/ecommerce",
     "technologies": ["Next.js", "Stripe", "PostgreSQL", "Docker"],
     "category": "Web Development"
+  },
+  {
+    "id": 5,
+    "title": "Microfinance & Loan Management System",
+    "description": "A microfinance management system with borrower onboarding, loan lifecycle, repayments, and role-based access (admin, branch manager, loan officer, borrower).",
+    "image": "",
+    "link": "https://microfinance-laravel.fly.dev/",
+    "technologies": ["Laravel", "PHP", "MySQL", "Tailwind CSS"],
+    "category": "Software Development"
   }
 ]
