@@ -4,9 +4,9 @@ import teamData from '../data/team.json';
 // Preload all candidate images from src/assets/images (any depth)
 // This allows using images added to src/assets/images without editing imports everywhere.
 // Webpack/Cra will bundle only the matched files.
-// Build-time image resolver from src/assets/images (no direct imports)
+// Build-time image resolver from src/assets/images
 // @ts-ignore - webpack specific
-const teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/);
+const teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
 const teamImageKeys = teamImagesCtx.keys();
 
 function toSlug(value) {
@@ -16,20 +16,56 @@ function toSlug(value) {
     .replace(/(^-|-$)/g, '');
 }
 
-function resolveMemberImage(member) {
-  const nameSlug = toSlug(member.name);
-  // Try exact filename in member.image first (case-insensitive)
-  if (member.image && !member.image.startsWith('/')) {
-    const normalized = String(member.image).toLowerCase().trim();
-    const exactKey = teamImageKeys.find(k => k.toLowerCase().endsWith(`/${normalized}`));
-    if (exactKey) return teamImagesCtx(exactKey);
+function getFileNameFromPath(path) {
+  const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
+  return match ? match[0] : '';
+}
+
+function normalizeFileName(name) {
+  return String(name || '').toLowerCase().trim();
+}
+
+// Create map of normalized filenames to keys
+const teamImageMap = {};
+teamImageKeys.forEach(key => {
+  const fileName = getFileNameFromPath(key);
+  const normalized = normalizeFileName(fileName);
+  if (normalized && !teamImageMap[normalized]) {
+    teamImageMap[normalized] = key;
   }
-  // Otherwise, find any image file whose name contains the name slug
-  for (const key of teamImageKeys) {
-    if (toSlug(key).includes(nameSlug)) {
-      try { return teamImagesCtx(key); } catch (_) { /* ignore */ }
+  
+  // Also map by slug for name-based matching
+  const slug = toSlug(fileName);
+  if (slug && !teamImageMap[slug]) {
+    teamImageMap[slug] = key;
+  }
+});
+
+function resolveMemberImage(member) {
+  // Try exact filename in member.image first
+  if (member.image && !member.image.startsWith('/')) {
+    const normalized = normalizeFileName(member.image);
+    if (teamImageMap[normalized]) {
+      try {
+        return teamImagesCtx(teamImageMap[normalized]);
+      } catch (e) {
+        console.warn('Failed to load team image:', member.image, e);
+      }
     }
   }
+  
+  // Otherwise, find by member name slug
+  const nameSlug = toSlug(member.name);
+  for (const [key, imageKey] of Object.entries(teamImageMap)) {
+    if (key.includes(nameSlug) || nameSlug.includes(key)) {
+      try {
+        return teamImagesCtx(imageKey);
+      } catch (e) {
+        // Continue searching
+      }
+    }
+  }
+  
   // Fallback: allow public path if provided
   if (member.image && member.image.startsWith('/')) return member.image;
   return null;
