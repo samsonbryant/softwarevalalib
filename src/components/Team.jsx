@@ -42,7 +42,7 @@ teamImageKeys.forEach(key => {
 });
 
 function resolveMemberImage(member) {
-  // Try exact filename in member.image first
+  // Priority 1: Try exact filename in member.image (if it's a relative path)
   if (member.image && !member.image.startsWith('/')) {
     const normalized = normalizeFileName(member.image);
     if (teamImageMap[normalized]) {
@@ -54,10 +54,18 @@ function resolveMemberImage(member) {
     }
   }
   
-  // Otherwise, find by member name slug
+  // Priority 2: Find by member name slug (matches files like "solomon-borkai.jpg")
   const nameSlug = toSlug(member.name);
+  const firstNameSlug = toSlug(member.name.split(' ')[0]);
+  const lastNameSlug = toSlug(member.name.split(' ')[member.name.split(' ').length - 1]);
+  
+  // Try full name slug first
   for (const [key, imageKey] of Object.entries(teamImageMap)) {
-    if (key.includes(nameSlug) || nameSlug.includes(key)) {
+    const fileSlug = toSlug(key);
+    if (fileSlug === nameSlug || 
+        fileSlug.includes(nameSlug) || 
+        nameSlug.includes(fileSlug) ||
+        (fileSlug.includes(firstNameSlug) && fileSlug.includes(lastNameSlug))) {
       try {
         return teamImagesCtx(imageKey);
       } catch (e) {
@@ -66,8 +74,11 @@ function resolveMemberImage(member) {
     }
   }
   
-  // Fallback: allow public path if provided
-  if (member.image && member.image.startsWith('/')) return member.image;
+  // Priority 3: Fallback to public path if provided
+  if (member.image && member.image.startsWith('/')) {
+    return member.image;
+  }
+  
   return null;
 }
 

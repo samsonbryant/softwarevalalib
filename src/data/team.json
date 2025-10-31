@@ -7,7 +7,7 @@
     "email": "softwarevalaliberiainc@gmail.com",
     "phone": "+231 777 969 602 / +231 888 636 071",
     "skills": ["Leadership", "Business Strategy", "Software Solutions", "Digital Transformation"],
-    "image": "/assets/images/team/solomon-borkai.jpg"
+    "image": "solomon-borkai.jpg"
   },
   {
     "id": 2,
@@ -17,6 +17,6 @@
     "email": "Samsonbryant89@gmail.com",
     "phone": "+231 775 592 486 / +231 881 031 901",
     "skills": ["Software Development", "ICT Strategy", "System Architecture", "Team Leadership"],
-    "image": "/assets/images/team/samson-bryant.jpg"
+    "image": "samson-bryant.jpg"
   }
 ]
