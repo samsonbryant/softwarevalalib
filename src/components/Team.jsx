@@ -1,83 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamData from '../data/team.json';
 
-// Direct imports for guaranteed resolution
-import solomonImg from '../assets/images/solomon-borkai.jpg';
-import samsonImg from '../assets/images/samson-bryant.jpg';
-
-// Direct mapping of known team members to their images
-const directTeamImages = {
-  'solomon-borkai.jpg': solomonImg,
-  'samson-bryant.jpg': samsonImg,
-};
-
-// Build-time image resolver from src/assets/images (fallback)
-// @ts-ignore - webpack specific
-let teamImagesCtx;
-let teamImageKeys = [];
-let teamImageMap = {};
-
-try {
-  teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
-  teamImageKeys = teamImagesCtx.keys();
-  
-  // Create map of normalized filenames to keys
-  function getFileNameFromPath(path) {
-    const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
-    return match ? match[0] : '';
-  }
-  
-  function normalizeFileName(name) {
-    return String(name || '').toLowerCase().trim();
-  }
-  
-  teamImageKeys.forEach(key => {
-    const fileName = getFileNameFromPath(key);
-    const normalized = normalizeFileName(fileName);
-    if (normalized && !teamImageMap[normalized]) {
-      teamImageMap[normalized] = key;
-    }
-  });
-} catch (e) {
-  console.warn('require.context failed, using direct imports only:', e);
-}
-
-function normalizeFileName(name) {
-  return String(name || '').toLowerCase().trim();
-}
-
+// Use public paths for team images (most reliable for Render)
+// Images should be in public/assets/images/ folder
 function resolveMemberImage(member) {
-  // Priority 1: Direct import mapping (most reliable)
-  if (member.image && !member.image.startsWith('/')) {
-    const normalized = normalizeFileName(member.image);
-    if (directTeamImages[normalized] || directTeamImages[member.image]) {
-      return directTeamImages[normalized] || directTeamImages[member.image];
-    }
-  }
+  if (!member.image) return null;
   
-  // Priority 2: require.context fallback
-  if (teamImagesCtx && member.image && !member.image.startsWith('/')) {
-    const normalized = normalizeFileName(member.image);
-    if (teamImageMap[normalized]) {
-      try {
-        return teamImagesCtx(teamImageMap[normalized]);
-      } catch (e) {
-        console.warn('Failed to load team image via require.context:', member.image, e);
-      }
-    }
-  }
-  
-  // Priority 3: Public path fallback
-  if (member.image && member.image.startsWith('/')) {
+  // If already a public path, use it
+  if (member.image.startsWith('/')) {
     return member.image;
   }
   
-  // Priority 4: Try public path with known filename
-  if (member.image) {
-    return `/assets/images/${member.image}`;
-  }
-  
-  return null;
+  // Otherwise, construct public path
+  return `/assets/images/${member.image}`;
 }
 
 const Team = () => {
