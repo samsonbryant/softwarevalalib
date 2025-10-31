@@ -2,62 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import projectsData from '../data/projects.json';
 
-// Build-time image resolver that tolerates spaces and varied casing
-// It looks up images from src/assets/images by filename from projects.json
-// @ts-ignore - require.context is provided by webpack in CRA
-const imagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
-const imageKeys = imagesCtx.keys();
-
-// Normalize function that handles trailing spaces and case
-function normalizeFileName(name) {
-  return String(name || '').toLowerCase().trim();
-}
-
-// Extract just the filename from require.context path (e.g., "./School Ease Management.jpg" -> "School Ease Management.jpg")
-function getFileNameFromPath(path) {
-  const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
-  return match ? match[0] : '';
-}
-
-// Create a map of normalized filenames to their require.context keys
-const imageMap = {};
-imageKeys.forEach(key => {
-  const fileName = getFileNameFromPath(key);
-  const normalized = normalizeFileName(fileName);
-  if (normalized && !imageMap[normalized]) {
-    imageMap[normalized] = key;
-  }
-});
-
+// Use public paths for project images (most reliable for Render)
+// Images should be in public/assets/images/ folder
 function resolveProjectImage(fileName) {
   if (!fileName) return null;
   
-  // Normalize the target filename
-  const targetNormalized = normalizeFileName(fileName);
-  
-  // Try exact match first
-  if (imageMap[targetNormalized]) {
-    try {
-      return imagesCtx(imageMap[targetNormalized]);
-    } catch (e) {
-      console.warn('Failed to load image:', fileName, e);
-    }
-  }
-  
-  // Fallback: try partial match (for files with trailing spaces)
-  const targetWithoutSpaces = targetNormalized.replace(/\s+$/, '');
-  for (const [normalized, key] of Object.entries(imageMap)) {
-    if (normalized.replace(/\s+$/, '') === targetWithoutSpaces || 
-        normalized === targetWithoutSpaces + ' ') {
-      try {
-        return imagesCtx(key);
-      } catch (e) {
-        console.warn('Failed to load image (partial match):', fileName, e);
-      }
-    }
-  }
-  
-  // Final fallback: try public path
+  // Use public path - files are in public/assets/images/
   return `/assets/images/${fileName}`;
 }
 

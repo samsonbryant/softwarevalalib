@@ -2,54 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import projectsData from '../data/projects.json';
 
-// Build-time image resolver from src/assets/images using the filename in projects.json
-// @ts-ignore - require.context is provided by webpack in CRA
-const imagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
-const imageKeys = imagesCtx.keys();
-
-function normalizeFileName(name) {
-  return String(name || '').toLowerCase().trim();
-}
-
-function getFileNameFromPath(path) {
-  const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
-  return match ? match[0] : '';
-}
-
-const imageMap = {};
-imageKeys.forEach(key => {
-  const fileName = getFileNameFromPath(key);
-  const normalized = normalizeFileName(fileName);
-  if (normalized && !imageMap[normalized]) {
-    imageMap[normalized] = key;
-  }
-});
-
+// Use public paths for project images (most reliable for Render)
+// Images should be in public/assets/images/ folder
 function resolveProjectImage(fileName) {
   if (!fileName) return null;
   
-  const targetNormalized = normalizeFileName(fileName);
-  
-  if (imageMap[targetNormalized]) {
-    try {
-      return imagesCtx(imageMap[targetNormalized]);
-    } catch (e) {
-      console.warn('Failed to load image:', fileName, e);
-    }
-  }
-  
-  const targetWithoutSpaces = targetNormalized.replace(/\s+$/, '');
-  for (const [normalized, key] of Object.entries(imageMap)) {
-    if (normalized.replace(/\s+$/, '') === targetWithoutSpaces || 
-        normalized === targetWithoutSpaces + ' ') {
-      try {
-        return imagesCtx(key);
-      } catch (e) {
-        console.warn('Failed to load image (partial match):', fileName, e);
-      }
-    }
-  }
-  
+  // Use public path - files are in public/assets/images/
   return `/assets/images/${fileName}`;
 }
 
