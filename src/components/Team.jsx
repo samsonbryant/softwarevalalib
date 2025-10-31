@@ -1,82 +1,80 @@
 import React, { useState, useEffect, useRef } from 'react';
 import teamData from '../data/team.json';
 
-// Preload all candidate images from src/assets/images (any depth)
-// This allows using images added to src/assets/images without editing imports everywhere.
-// Webpack/Cra will bundle only the matched files.
-// Build-time image resolver from src/assets/images
+// Direct imports for guaranteed resolution
+import solomonImg from '../assets/images/solomon-borkai.jpg';
+import samsonImg from '../assets/images/samson-bryant.jpg';
+
+// Direct mapping of known team members to their images
+const directTeamImages = {
+  'solomon-borkai.jpg': solomonImg,
+  'samson-bryant.jpg': samsonImg,
+};
+
+// Build-time image resolver from src/assets/images (fallback)
 // @ts-ignore - webpack specific
-const teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
-const teamImageKeys = teamImagesCtx.keys();
+let teamImagesCtx;
+let teamImageKeys = [];
+let teamImageMap = {};
 
-function toSlug(value) {
-  return String(value || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/(^-|-$)/g, '');
-}
-
-function getFileNameFromPath(path) {
-  const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
-  return match ? match[0] : '';
+try {
+  teamImagesCtx = require.context('../assets/images', false, /\.(png|jpe?g|webp)$/i);
+  teamImageKeys = teamImagesCtx.keys();
+  
+  // Create map of normalized filenames to keys
+  function getFileNameFromPath(path) {
+    const match = path.match(/[^/\\]+\.(png|jpe?g|webp)$/i);
+    return match ? match[0] : '';
+  }
+  
+  function normalizeFileName(name) {
+    return String(name || '').toLowerCase().trim();
+  }
+  
+  teamImageKeys.forEach(key => {
+    const fileName = getFileNameFromPath(key);
+    const normalized = normalizeFileName(fileName);
+    if (normalized && !teamImageMap[normalized]) {
+      teamImageMap[normalized] = key;
+    }
+  });
+} catch (e) {
+  console.warn('require.context failed, using direct imports only:', e);
 }
 
 function normalizeFileName(name) {
   return String(name || '').toLowerCase().trim();
 }
 
-// Create map of normalized filenames to keys
-const teamImageMap = {};
-teamImageKeys.forEach(key => {
-  const fileName = getFileNameFromPath(key);
-  const normalized = normalizeFileName(fileName);
-  if (normalized && !teamImageMap[normalized]) {
-    teamImageMap[normalized] = key;
+function resolveMemberImage(member) {
+  // Priority 1: Direct import mapping (most reliable)
+  if (member.image && !member.image.startsWith('/')) {
+    const normalized = normalizeFileName(member.image);
+    if (directTeamImages[normalized] || directTeamImages[member.image]) {
+      return directTeamImages[normalized] || directTeamImages[member.image];
+    }
   }
   
-  // Also map by slug for name-based matching
-  const slug = toSlug(fileName);
-  if (slug && !teamImageMap[slug]) {
-    teamImageMap[slug] = key;
-  }
-});
-
-function resolveMemberImage(member) {
-  // Priority 1: Try exact filename in member.image (if it's a relative path)
-  if (member.image && !member.image.startsWith('/')) {
+  // Priority 2: require.context fallback
+  if (teamImagesCtx && member.image && !member.image.startsWith('/')) {
     const normalized = normalizeFileName(member.image);
     if (teamImageMap[normalized]) {
       try {
         return teamImagesCtx(teamImageMap[normalized]);
       } catch (e) {
-        console.warn('Failed to load team image:', member.image, e);
+        console.warn('Failed to load team image via require.context:', member.image, e);
       }
     }
   }
   
-  // Priority 2: Find by member name slug (matches files like "solomon-borkai.jpg")
-  const nameSlug = toSlug(member.name);
-  const firstNameSlug = toSlug(member.name.split(' ')[0]);
-  const lastNameSlug = toSlug(member.name.split(' ')[member.name.split(' ').length - 1]);
-  
-  // Try full name slug first
-  for (const [key, imageKey] of Object.entries(teamImageMap)) {
-    const fileSlug = toSlug(key);
-    if (fileSlug === nameSlug || 
-        fileSlug.includes(nameSlug) || 
-        nameSlug.includes(fileSlug) ||
-        (fileSlug.includes(firstNameSlug) && fileSlug.includes(lastNameSlug))) {
-      try {
-        return teamImagesCtx(imageKey);
-      } catch (e) {
-        // Continue searching
-      }
-    }
-  }
-  
-  // Priority 3: Fallback to public path if provided
+  // Priority 3: Public path fallback
   if (member.image && member.image.startsWith('/')) {
     return member.image;
+  }
+  
+  // Priority 4: Try public path with known filename
+  if (member.image) {
+    return `/assets/images/${member.image}`;
   }
   
   return null;
